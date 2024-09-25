@@ -8,12 +8,14 @@
 html {
   box-sizing: border-box;
 }
+
 /* og látum erfast á allt */
 *,
 *:before,
 *:after {
   box-sizing: inherit;
 }
+
 
 /* hjálpar class sem felur sjónrænt en skjálesarar lesa */
 .sr-only:not(:focus):not(:active) {
@@ -35,6 +37,10 @@ html {
   /* Grunn bilið okkar er 1rem == 16px */
   --spacing: 1rem;
 
+  /* Bil á milli „stærri“ eininga (header, efnisbox, footer) */
+  --vertical-space: calc(var(--gutter) * 1);
+  --vertical-space-large: calc(var(--gutter) * 1.5);
+
   /* Hámarks og lágmarks breidd á efni */
   --max-width: 1200px;
   --min-width-image: 200px;
@@ -45,13 +51,20 @@ html {
   --border-width: 1px;
   --border-radius-regular: 5px;
   --border-radius-image: 10px;
-  --border-regular: 1px solid #000; /* todo longhand */
-  --border-with-background: 4px solid #cc99bb;
+  --border-regular: 1px solid black;
+  /* Grid stillingar */
+  --columns: 12;
+  --gutter: 30px;
+  --offset: 20px;
+
+  /* Breidd á efni með offset */
+  --width-offset: calc(100% - (2 * var(--offset)));
 
   /* Litir */
   /** Litir með nafni **/
   --color-yellow: #f3dd99;
   --color-white: #ffffff;
+  --color-black: #000000;
   --color-purple: #eebbdd;
   --color-purple-dark: #cc99bb;
 
@@ -65,6 +78,11 @@ html {
   --font-base-size: 1rem;
   --font-family-base: 'Open Sans', Arial, Helvetica, sans-serif;
   --font-family-heading: 'Matemasie-Regular', 'Comic Sans MS', cursive;
+
+  /* Transitions */
+  --transition-time-short: 300ms;
+  --transition-time-long: 600ms;
+  --transition-timing-function: ease-in-out;
 }
 
 /* Almennt */
@@ -73,6 +91,7 @@ html {
 
 /*** Grunnstærð er 16px ***/
 html {
+  background-color: var(--color-background-primary);
   font-size: var(--font-size-base);
 }
 
@@ -150,11 +169,17 @@ a {
  * Athugið að til þess að þetta virki þar að setja <div class="wrapper"> utan um allt efni 
  * innan <body>.
  */
+
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing);
+  /* Notum grid hér til að setja upp bil á milli header, meginmáls og fóts */
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 100%;
+
+  /* grid items eru miðjuð */
+  justify-items: center;
+
+  gap: var(--vertical-space);
 
   width: 100%;
   min-height: 100vh;
@@ -162,24 +187,40 @@ a {
   background-color: var(--color-background-primary);
 }
 
+@media (min-width: 800px) {
+  .wrapper {
+    gap: var(--vertical-space-large)
+  }
+}
+
 .wrapper .wrapper-content {
-  flex: 1;
-
-  display: flex;
-  gap: var(--spacing);
-
-  padding-left: var(--spacing);
-  padding-right: var(--spacing);
-  width: 100%;
+  width: var(--width-offset);
   max-width: var(--max-width);
 }
 
 .wrapper .wrapper-nav {
-  flex: 1;
+  margin-bottom: var(--spacing);
 }
 
-.wrapper .wrapper-main {
-  flex: 4;
+.wrapper-main {
+  grid-column: span 12;
+}
+
+@media (min-width: 800px) {
+  .wrapper .wrapper-content {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    gap: var(--gutter);
+  }
+
+  .wrapper .wrapper-nav {
+    grid-column: span 2;
+  }
+
+  .wrapper .wrapper-main {
+    grid-column: span 10;
+
+  }
 }
 
 /* Það sem fylgir er tillaga að uppbyggingu á selectorum fyrir verkefnið */
@@ -197,16 +238,16 @@ header {
 
 /** Valmynd **/
 
-nav {
-}
+nav {}
 
 nav ul {
+  text-align: center;
   list-style: none;
 }
 
 nav ul li {
+  display: inline-flex;
   margin-bottom: calc(var(--spacing) / 2);
-  text-align: left;
 }
 
 /** Meginmál og efni forsíðu **/
@@ -219,47 +260,89 @@ main {
  * notum þetta til að fá bil á milli eininga _almennt_
  * en ekki að hver eining þurfi að huga að bili
  */
-main > .content {
+main>.content {
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing) * 2);
 }
 
+
 /*** Inngangsefni á forsíðu ***/
 
 .intro {
-  display: flex;
-  justify-content: center;
+  display: grid;
   gap: var(--spacing);
 }
 
 .intro img {
   order: 1;
 
-  max-width: var(--max-width-image);
+  max-width: 100%;
+  height: auto;
   border-radius: var(--border-radius-image);
+}
+
+@media (min-width: 600px) {
+  .intro {
+    display: flex;
+
+    gap: var(--spacing);
+  }
+
+  .intro img {
+    order: 1;
+
+    max-width: var(--max-width-image);
+    border-radius: var(--border-radius-image);
+  }
 }
 
 /** Cards **/
 
 .cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
+  display: grid;
+  grid-template-rows: auto;
+  gap: var(--vertical-space);
+  justify-items: center;
+
+  max-width: 100%;
 }
 
-.cards > .title {
+.cards>.title {
   width: 100%;
   text-align: center;
 }
 
-.cards > .content {
-  display: flex;
-  justify-content: center;
-  gap: calc(var(--spacing) * 2);
-  flex-wrap: wrap;
+.cards>.content {
+  display: grid;
+  grid-template-rows: auto;
+  gap: var(--vertical-space);
+  justify-items: center;
+
 
   width: 100%;
+}
+
+/* TODO skilgreinda brotpunkt fyrir .cards .content */
+@media (min-width: 600px) {
+
+  /* TODO hvaða stílar ættu að vera hér? */
+  .cards>.content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    grid-column: span 12;
+  }
+
+  .cards>.title {
+    grid-column: span 12;
+
+  }
+
+  .card {
+    grid-column: span 5;
+  }
+
 }
 
 /** Card **/
@@ -267,16 +350,18 @@ main > .content {
 .card {
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   /* hér verðum við að reikna út breidd svo að flex-wrap virki */
-  width: calc(50% - var(--spacing));
+  /*  width: calc(100% - var(--spacing));*/
+
 }
 
-.card > .image {
+.card>.image {
   width: 100%;
 }
 
-.card > .image img {
+.card>.image img {
   display: block;
 
   border-top-left-radius: var(--border-radius-regular);
@@ -287,7 +372,7 @@ main > .content {
   object-position: 50% 50%;
 }
 
-.card > .content {
+.card>.content {
   flex: 1;
 
   display: flex;
@@ -301,6 +386,12 @@ main > .content {
   border-bottom-right-radius: var(--border-radius-regular);
 }
 
+@media (min-width: 600px) {
+  .card {
+    width: calc(50% - var(--spacing));
+  }
+}
+
 /**
  * notum nýja selectora! brotið niður
  * .card            <- veljum öll .card
@@ -310,16 +401,16 @@ main > .content {
  * > .content       <- sem er strax barn af .card
  * Þ.e.a.s. fyrir .card sem hefur ekki .image, setja border + radíus á allt .content
  */
-.card:not(:has(> .image)) > .content {
+.card:not(:has(> .image))>.content {
   border: var(--border-regular);
   border-radius: var(--border-radius-regular);
 }
 
-.card > .content > .text {
+.card>.content>.text {
   flex: 1;
 }
 
-.card > .content > .actions {
+.card>.content>.actions {
   display: flex;
   justify-content: space-between;
   gap: var(--spacing);
@@ -330,7 +421,7 @@ main > .content {
 /** Fótur **/
 
 footer {
-  display: flex;
+  display: grid;
   justify-content: center;
   gap: var(--spacing);
 
@@ -342,7 +433,7 @@ footer {
   text-align: center;
 }
 
-footer > section {
+footer>section {
   max-width: var(--max-width-footer-section);
 }
 
@@ -352,6 +443,12 @@ footer ul {
 
 footer h2 {
   margin-bottom: var(--spacing);
+}
+
+@media (min-width: 600px) {
+  footer {
+    display: flex;
+  }
 }
 
 /*** Opnunartími ***/
@@ -457,4 +554,3 @@ fieldset input[type='checkbox'] {
   margin-right: calc(var(--spacing) * 0.5);
   width: auto;
 }
-
