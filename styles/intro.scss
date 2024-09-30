@@ -1,0 +1,29 @@
+/*** Inngangsefni á forsíðu ***/
+
+.intro {
+    display: grid;
+    gap: var(--spacing);
+}
+
+.intro img {
+    order: 1;
+
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-image);
+}
+
+@media (min-width: 600px) {
+    .intro {
+        display: flex;
+
+        gap: var(--spacing);
+    }
+
+    .intro img {
+        order: 1;
+
+        max-width: var(--max-width-image);
+        border-radius: var(--border-radius-image);
+    }
+}

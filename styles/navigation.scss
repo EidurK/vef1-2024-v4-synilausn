@@ -1,0 +1,24 @@
+nav {}
+
+nav ul {
+    text-align: center;
+    list-style: none;
+}
+
+nav ul li {
+    padding: 5px;
+    display: inline-flex;
+    margin-bottom: calc(var(--spacing) / 2);
+}
+
+
+@media (min-width: 800px) {
+
+    nav ul li {
+        display: grid;
+        padding: 0%;
+        text-align: left;
+        margin-bottom: calc(var(--spacing) / 2);
+    }
+
+}

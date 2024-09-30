@@ -1,0 +1,25 @@
+{
+  "name": "vef1-2024-v4-synilausn",
+  "version": "1.0.0",
+  "description": "Sýnilausn á [verkefni 4](https://github.com/vefforritun/vef1-2024-v4) byggð á sýnilausn á [verkefni 3](https://github.com/vefforritun/vef1-2024-v3-synilausn).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "sass styles.scss style.css",
+    "sass-watch": "sass --watch styles.scss style.css",
+    "browser-sync": "browser-sync start --server --files index.html *.css",
+    "dev": "concurrently npm:sass-watch npm:browser-sync",
+    "lint-css": "stylelint styles.css",
+    "lint-scss": "stylelint styles.scss './styles/*.scss'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.0.1",
+    "postcss": "^8.4.47",
+    "sass": "^1.79.4",
+    "stylelint": "^16.9.0",
+    "stylelint-config-sass-guidelines": "^12.1.0"
+  }
+}
